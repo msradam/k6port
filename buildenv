@@ -2,7 +2,7 @@ export ZOPEN_BUILD_LINE="STABLE"
 export ZOPEN_STABLE_URL="https://github.com/grafana/k6.git"
 export ZOPEN_STABLE_TAG="v1.0.0"
 export ZOPEN_STABLE_DEPS="check_go git"
-export ZOPEN_CATEGORIES="development testing"
+export ZOPEN_CATEGORIES="networking"
 export ZOPEN_COMP=GO
 export ZOPEN_NAME="k6"
 
