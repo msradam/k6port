@@ -32,10 +32,6 @@ zopen_configure()
   find . -name "*.go" -exec chtag -tc 1208 {} \;
   find . -name "go.mod" -exec chtag -tc 1208 {} \;
   find . -name "go.sum" -exec chtag -tc 1208 {} \;
-
-  echo "Applying z/OS patches..."
-  git apply -v --ignore-space-change --ignore-whitespace ../patches/afero_const_bsds.patch
-  git apply -v --ignore-space-change --ignore-whitespace ../patches/afero_const_win_unix.patch
 }
 
 zopen_install()
