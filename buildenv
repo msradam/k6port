@@ -2,7 +2,7 @@ export ZOPEN_BUILD_LINE="STABLE"
 export ZOPEN_STABLE_URL="https://github.com/grafana/k6.git"
 export ZOPEN_STABLE_TAG="v1.0.0"
 export ZOPEN_STABLE_DEPS="check_go git"
-export ZOPEN_CATEGORIES="networking"
+export ZOPEN_CATEGORIES="development"
 export ZOPEN_COMP=GO
 export ZOPEN_NAME="k6"
 
@@ -20,6 +20,8 @@ zopen_init()
   mkdir -p $ZOPEN_INSTALL_DIR/bin
   unset CC CXX
   export CGO_ENABLED=0
+  export GOOS=zos
+  export GOARCH=s390x
   export GOTOOLCHAIN=local
 }
 
@@ -29,6 +31,24 @@ zopen_configure()
   find . -name "*.go" -exec chtag -tc 1208 {} \;
   find . -name "go.mod" -exec chtag -tc 1208 {} \;
   find . -name "go.sum" -exec chtag -tc 1208 {} \;
+
+  echo "Patching vendored afero for z/OS..."
+  
+  ed vendor/github.com/spf13/afero/const_bsds.go << 'PATCH1'
+/dragonfly$/s//dragonfly zos/
+w
+q
+PATCH1
+
+  ed vendor/github.com/spf13/afero/const_win_unix.go << 'PATCH2'
+/+build !netbsd/a
+// +build !zos
+.
+w
+q
+PATCH2
+
+  echo "Patches applied."
 }
 
 zopen_install()
