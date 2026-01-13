@@ -7,6 +7,7 @@ export ZOPEN_COMP=GO
 export ZOPEN_NAME="k6"
 
 export ZOPEN_CONFIGURE="zopen_configure"
+export ZOPEN_CONFIGURE_MINIMAL=1
 export ZOPEN_MAKE="go"
 export ZOPEN_MAKE_OPTS="build"
 export ZOPEN_MAKE_MINIMAL=1
@@ -32,23 +33,9 @@ zopen_configure()
   find . -name "go.mod" -exec chtag -tc 1208 {} \;
   find . -name "go.sum" -exec chtag -tc 1208 {} \;
 
-  echo "Patching vendored afero for z/OS..."
-  
-  ed vendor/github.com/spf13/afero/const_bsds.go << 'PATCH1'
-/dragonfly$/s//dragonfly zos/
-w
-q
-PATCH1
-
-  ed vendor/github.com/spf13/afero/const_win_unix.go << 'PATCH2'
-/+build !netbsd/a
-// +build !zos
-.
-w
-q
-PATCH2
-
-  echo "Patches applied."
+  echo "Applying z/OS patches..."
+  git apply -v --ignore-space-change --ignore-whitespace ../patches/afero_const_bsds.patch
+  git apply -v --ignore-space-change --ignore-whitespace ../patches/afero_const_win_unix.patch
 }
 
 zopen_install()
